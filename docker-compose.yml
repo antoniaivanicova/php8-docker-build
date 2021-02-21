@@ -3,14 +3,44 @@ version: '3.6'
 services:
   web:
     build:
-       context: ./build
-       dockerfile: Dockerfile
+       context: .
+       dockerfile: build/Dockerfile
     container_name: docker-php8
     working_dir: /var/www/html
+    # Pockaj na nastartovanie mysql kontajnera
+    # Tiez nalinkuje do /etc/hosts IP kontajnera (host: mysql)
+    depends_on:
+      - mysql
     volumes:
-      - ./volumes/php :/var/www/html
+      - ./volumes/php:/var/www/html
     ports:
       - 8081:80
       - 8082:443
     environment:
       XDEBUG_MODE: debug
+  mysql:
+    image: mysql:8.0
+    container_name: docker-mysql
+    volumes:  
+      - ./build/mysql:/etc/mysql/conf.d
+    environment:
+      # non root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      # root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: default_schema
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: docker-phpmyadmin
+    links:
+      - mysql
+    environment:
+      # host pri prihlasovani
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8183:80

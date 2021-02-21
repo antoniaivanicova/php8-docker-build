@@ -1,5 +1,4 @@
 FROM debian:buster
-MAINTAINER Bc. Josef Jebavý <email@josefjebavy.cz>
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN export XDEBUG_SESSION=PHPSTORM
@@ -37,11 +36,10 @@ RUN apt-get update && \
   apt-get -yqq install msmtp
 
 #COPY msmtprc /etc/msmtprc
-COPY php.ini /etc/php/8.0/cli/php.ini
-COPY php.ini /etc/php/8.0/apache2/php.ini
+COPY build/php/php.ini /etc/php/8.0/cli/php.ini
+COPY build/php/php.ini /etc/php/8.0/apache2/php.ini
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 
 RUN mkdir -p /var/www/project && a2enmod vhost_alias ssl  rewrite headers 
 
@@ -49,6 +47,8 @@ RUN mkdir -p /var/www/project && a2enmod vhost_alias ssl  rewrite headers
 RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
     ln -sf /proc/self/fd/1 /var/log/apache2/error.log
 
+# Restartni apache, aby sa prejavili pripadne zmeny
+RUN service apache2 restart
 
 EXPOSE 80 443
 
