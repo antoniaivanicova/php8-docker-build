@@ -17,7 +17,7 @@ RUN  apt-get -qq update && apt-get install -y \
    libapache2-mod-php8.0 php8.0-cgi \
    php8.0-cli        php8.0-gd      php8.0-common    php8.0-intl    \
    php8.0-mbstring     php8.0-mysql    php8.0-opcache      php8.0-readline       php8.0-xml    php8.0-xsl   \
-   php8.0-zip   php8.0-sqlite3 \
+   php8.0-zip   php8.0-sqlite3	  php8.0-curl \
    apache2
 
 RUN apt-get install php-pear php8.0-dev -y
@@ -26,6 +26,7 @@ RUN yes | pecl install xdebug \
    && echo "zend_extension=/usr/lib/php/20200930/xdebug.so" > /etc/php/8.0/apache2/conf.d/xdebug.ini \
    && echo "xdebug.start_with_request=yes" >> /etc/php/8.0/apache2/conf.d/xdebug.ini \
    && echo "xdebug.client_host=host.docker.internal" >> /etc/php/8.0/apache2/conf.d/xdebug.ini \
+   && echo "xdebug.mode=debug" >> /etc/php/8.0/apache2/conf.d/xdebug.ini \
    && echo "xdebug.idekey=PHPSTORM" >> /etc/php/8.0/apache2/conf.d/xdebug.ini \
    && echo "xdebug.remote_autostart=off" >> /etc/php/8.0/apache2/conf.d/xdebug.ini
 
