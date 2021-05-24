@@ -20,7 +20,7 @@ RUN  apt-get -qq update && apt-get install -y \
    php8.0-zip   php8.0-sqlite3	  php8.0-curl \
    apache2
 
-RUN apt-get install php-pear php8.0-dev -y
+RUN apt-get update && echo "Y" | apt-get install php8.0-dev && apt-get install php-pear
 
 RUN yes | pecl install xdebug \
    && echo "zend_extension=/usr/lib/php/20200930/xdebug.so" > /etc/php/8.0/apache2/conf.d/xdebug.ini \
